@@ -27,29 +27,37 @@ class _ListDisplayState extends State<ListDisplay> {
   final TextStyle _biggerFont = const TextStyle(fontSize: 18);
   @override
   Widget build(BuildContext context) {
+    return _buildWords();
+  }
+
+  Widget _buildWords() {
     return ListView.builder(
         padding: EdgeInsets.all(16.0),
         itemBuilder: (BuildContext _context, int i) {
           //following loop only returns divider on odd indexes
           if (i.isOdd) {
-            print("odd index: " + i.toString());
+            //print("odd index: " + i.toString());
             return Divider(); // returns divider and exits the itemBuilder loop
           }
           //for even indexes:
           final int index = i ~/ 2;
-          print("index: " + index.toString());
-          //printing all word pairs generated at a take of 10 and then when the end of list reached, index>=words.length,
+          //print("index: " + index.toString());
+
           // we generate more 10 words and add it to the list,here, on index=0, words.length becomes 10 and for 10 iterations
           // the following if loop is false, not generating further word pairs and just returning ListTile.
           if (index >= _words.length) {
             _words.addAll(generateWordPairs().take(10));
           }
-          return ListTile(
-            title: Text(
-              _words[index].asPascalCase,
-              style: _biggerFont,
-            ),
-          );
+          return _buildRow(_words[index]);
         });
+  }
+
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: _biggerFont,
+      ),
+    );
   }
 }
