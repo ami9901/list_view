@@ -23,47 +23,33 @@ class ListDisplay extends StatefulWidget {
 }
 
 class _ListDisplayState extends State<ListDisplay> {
-  List<String> listItem = ['India'];
-  final TextEditingController eCtrl = TextEditingController();
+  final List<WordPair> _words = <WordPair>[];
+  final TextStyle _biggerFont = const TextStyle(fontSize: 18);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          TextField(
-            obscureText: false,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(20.0),
-                border: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(25.0),
-                ),
-                labelText: 'Enter a country'),
-            controller: eCtrl,
-            onSubmitted: (text) {
-              listItem.add(text);
-              eCtrl.clear();
-              setState(() {});
-            },
-            keyboardType: TextInputType.text,
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Expanded(
-            child: new ListView.builder(
-                itemCount: listItem.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return new Text(
-                    listItem[index],
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  );
-                }),
-          ),
-        ],
-      ),
-    );
+    return ListView.builder(
+        padding: EdgeInsets.all(16.0),
+        itemBuilder: (BuildContext _context, int i) {
+          //following loop only returns divider on odd indexes
+          if (i.isOdd) {
+            print("odd index: " + i.toString());
+            return Divider(); // returns divider and exits the itemBuilder loop
+          }
+          //for even indexes:
+          final int index = i ~/ 2;
+          print("index: " + index.toString());
+          //printing all word pairs generated at a take of 10 and then when the end of list reached, index>=words.length,
+          // we generate more 10 words and add it to the list,here, on index=0, words.length becomes 10 and for 10 iterations
+          // the following if loop is false, not generating further word pairs and just returning ListTile.
+          if (index >= _words.length) {
+            _words.addAll(generateWordPairs().take(10));
+          }
+          return ListTile(
+            title: Text(
+              _words[index].asPascalCase,
+              style: _biggerFont,
+            ),
+          );
+        });
   }
 }
