@@ -6,14 +6,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('List View In Flutter'),
-        ),
-        body: ListDisplay(),
-      ),
-    );
+    return MaterialApp(home: ListDisplay());
   }
 }
 
@@ -28,7 +21,39 @@ class _ListDisplayState extends State<ListDisplay> {
   final TextStyle _biggerFont = const TextStyle(fontSize: 18);
   @override
   Widget build(BuildContext context) {
-    return _buildWords();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('List View In Flutter'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
+        ],
+      ),
+      body: _buildWords(),
+    );
+  }
+
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          final tiles = _saved.map(
+            (WordPair pair) => _buildRow(pair),
+          );
+          final divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+            //color: Colors.black
+          ).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved Suggestions'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildWords() {
@@ -54,7 +79,8 @@ class _ListDisplayState extends State<ListDisplay> {
   }
 
   Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair); // contains() returns a bool value checking if the value exists in the _saved set
+    final alreadySaved = _saved.contains(
+        pair); // contains() returns a bool value checking if the value exists in the _saved set
     return ListTile(
       title: Text(
         pair.asPascalCase,
@@ -64,12 +90,11 @@ class _ListDisplayState extends State<ListDisplay> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
-      onTap:() {
+      onTap: () {
         setState(() {
           if (alreadySaved) {
             _saved.remove(pair);
-          }
-          else {
+          } else {
             _saved.add(pair);
           }
         });
