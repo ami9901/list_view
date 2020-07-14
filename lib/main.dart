@@ -6,7 +6,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: ListDisplay());
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.deepPurpleAccent,
+      ),
+      home: ListDisplay(),
+    );
   }
 }
 
@@ -23,7 +28,7 @@ class _ListDisplayState extends State<ListDisplay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List View In Flutter'),
+        title: Text('List View'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list), onPressed: _pushSaved),
         ],
