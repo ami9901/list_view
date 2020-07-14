@@ -24,6 +24,7 @@ class ListDisplay extends StatefulWidget {
 
 class _ListDisplayState extends State<ListDisplay> {
   final List<WordPair> _words = <WordPair>[];
+  final _saved = Set<WordPair>();
   final TextStyle _biggerFont = const TextStyle(fontSize: 18);
   @override
   Widget build(BuildContext context) {
@@ -53,11 +54,26 @@ class _ListDisplayState extends State<ListDisplay> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(pair); // contains() returns a bool value checking if the value exists in the _saved set
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap:() {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          }
+          else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 }
